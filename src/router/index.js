@@ -7,7 +7,7 @@ import Full from '@/containers/Full'
 // Views - Pages
 import Login from '@/views/Login'
 import Add from '@/views/goods/Add'
-import View from '@/views/goods/View'
+import Goods from '@/views/goods/Goods'
 import CustomerList from '@/views/customer/CustomerList'
 import One from '@/views/shipping/One'
 import UploadDelivery from '@/views/shipping/UploadDelivery'
@@ -41,9 +41,9 @@ export default new Router({
           component: Add
         },
         {
-          path: '/goods/view',
+          path: '/goods/list',
           name: '查看商品',
-          component: View
+          component: Goods
         },
         {
           path: '/shipping/one',

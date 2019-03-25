@@ -9,9 +9,6 @@
 <script>
   export default {
     name: 'header-dropdown',
-    data: () => {
-      return { itemsCount: 42 }
-    },
     methods: {
       logout () {
         window.sessionStorage.clear()

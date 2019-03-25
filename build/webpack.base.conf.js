@@ -27,7 +27,7 @@ module.exports = {
   },
   module: {
     rules: [
-      /** eslint 验证	    
+      /** eslint 验证
       {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
@@ -50,27 +50,18 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        exclude: [/fonts/],
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[name].[hash:7].[ext]',
-            publicPath: '../../',
-            outputPath: utils.assetsPath('img/'),
-            emitFile: true
-          }
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
       {
-        test: /\.(woff2?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        exclude: [/flags/],
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[name].[hash:7].[ext]',
-            publicPath: '../../',
-            outputPath: utils.assetsPath('fonts/')
-          }
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        query: {
+          limit: 10000,
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       }
     ]

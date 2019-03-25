@@ -11,8 +11,9 @@ export default {
 <style>
   /* Import Bootstrap Vue Styles */
   @import 'bootstrap-vue/dist/bootstrap-vue.css';
+  @import 'font-awesome/css/font-awesome.min.css';
 </style>
 <style lang="scss">
   // Import Main styles for this application
-  @import './scss/style';
+  @import './scss/style'
 </style>

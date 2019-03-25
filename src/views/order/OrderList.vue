@@ -1,84 +1,32 @@
 <template>
   <div class="animated fadeIn">
-    <!--<b-tabs>-->
-      <!--<b-tab title="本人" @click="getOrderList(0, 1, perPage, myselfSelected)">-->
-        <!--<b-row>-->
-          <!--<b-col sm="12">-->
-            <!--<b-form-group label="筛选条件：">-->
-              <!--<b-form-radio-group id="radios1" v-model="myselfSelected" :options="myselfOptions" name="radioOpenions1">-->
-              <!--</b-form-radio-group>-->
-            <!--</b-form-group>-->
-            <!--<b-card v-if="isNoMyselfOrderRecords">-->
-          <!--<span class="fa fa-info">-->
-           <!--列表中没有数据！！-->
-          <!--</span>-->
-            <!--</b-card>-->
-            <!--<b-card v-else >-->
-              <!--<b-table hover :items="myselfOrderData" :fields="fields" class="responsive">-->
-                <!--<template slot="createdAt" slot-scope="row">{{formatDate(row.value)}}</template>-->
-                <!--<template slot="payArrivalMoney" slot-scope="row">{{row.value == null ? '0' : row.value}}</template>-->
-                <!--<template slot="arriveTime" slot-scope="row">-->
-                  <!--<span>{{row.value == null? '无': formatDate(row.value)}}</span>-->
-                <!--</template>-->
-                <!--<template slot="status" slot-scope="row">-->
-                  <!--<span v-html="formatStatus(row.value, row.item.respMsg)"></span>-->
-                <!--</template>-->
-                <!--<template slot="action" slot-scope="row">-->
-                  <!--<span><b-button variant = "primary" @click = "checkStatus(row.item.id)">查看状态</b-button></span>-->
-                <!--</template>-->
-              <!--</b-table>-->
-              <!--<b-col md="6" class="my-1">-->
-                <!--<b-pagination :total-rows="totalMyselfOrderRows" :per-page="perPage" v-model="currentMyselfOrderPage" class="my-0" />-->
-              <!--</b-col>-->
-            <!--</b-card>-->
-          <!--</b-col>-->
-        <!--</b-row>-->
-      <!--</b-tab>-->
-      <!--<b-tab title="所有下级" @click="getOrderList(1, 1, perPage, myLevelSelected)">-->
-        <!--<b-row>-->
-          <!--<b-col sm="12">-->
-            <!--<b-form-group label="筛选条件：">-->
-              <!--<b-form-radio-group id="radios2" v-model="myLevelSelected" :options="myLevelOptions" name="radioOpenions2">-->
-              <!--</b-form-radio-group>-->
-            <!--</b-form-group>-->
-            <!--<b-card v-if="isNoMyLevelOrderRecords">-->
-          <!--<span class="fa fa-info">-->
-           <!--列表中没有数据！！-->
-          <!--</span>-->
-            <!--</b-card>-->
-            <!--<b-card v-else >-->
-              <!--<b-table hover :items="myLevelOrderData" :fields="fields" class="responsive">-->
-                <!--<template slot="createdAt" slot-scope="row">{{formatDate(row.value)}}</template>-->
-                <!--<template slot="payArrivalMoney" slot-scope="row">{{row.value == null ? '0' : row.value}}</template>-->
-                <!--<template slot="arriveTime" slot-scope="row">-->
-                  <!--<span>{{row.value == null? '无': formatDate(row.value)}}</span>-->
-                <!--</template>-->
-                <!--<template slot="status" slot-scope="row">-->
-                  <!--<span v-html="formatStatus(row.value, row.item.respMsg)"></span>-->
-                <!--</template>-->
-                <!--<template slot="action" slot-scope="row">-->
-                  <!--<span><b-button variant = "primary" @click = "checkStatus(row.item.id)">查看状态</b-button></span>-->
-                <!--</template>-->
-              <!--</b-table>-->
-              <!--<b-col md="6" class="my-1">-->
-                <!--<b-pagination :total-rows="totalMyLevelOrderRows" :per-page="perPage" v-model="currentMyLevelOrderPage" class="my-0" />-->
-              <!--</b-col>-->
-            <!--</b-card>-->
-          <!--</b-col>-->
-        <!--</b-row>-->
-      <!--</b-tab>-->
-      <!--&lt;!&ndash;<template slot="tabs">&ndash;&gt;-->
-      <!--&lt;!&ndash;<b-nav-item href="#" @click="hello">办卡</b-nav-item>&ndash;&gt;-->
-      <!--&lt;!&ndash;</template>&ndash;&gt;-->
-    <!--</b-tabs>-->
-    <!--<b-modal class="ddk-modal" :visible="modalVisible" :hide-footer="true" :hide-header="true">-->
-    <div class="ddk-modal-content" v-show="modalVisible">
-      <svg class="progress-circular">
-        <circle class="progress-circular__primary" cx="50%" cy="50%" r="40%" fill="none" stroke-width="10%" stroke-miterlimit="10"/>
-      </svg>
-      <br>
-      <span class="modal-text">加载中...</span>
-    </div>
+    <b-row>
+      <b-col sm="12">
+        <b-card v-if="isNoMyselfOrderRecords">
+          <span class="fa fa-info">
+           暂无数据！
+          </span>
+        </b-card>
+        <b-card v-else >
+          <b-table hover :items="myselfOrderData" :fields="fields" class="responsive">
+            <template slot="createdAt" slot-scope="row">{{formatDate(row.value)}}</template>
+            <template slot="payArrivalMoney" slot-scope="row">{{row.value == null ? '0' : row.value}}</template>
+            <template slot="arriveTime" slot-scope="row">
+              <span>{{row.value == null? '无': formatDate(row.value)}}</span>
+            </template>
+            <template slot="status" slot-scope="row">
+              <span v-html="formatStatus(row.value, row.item.respMsg)"></span>
+            </template>
+            <template slot="action" slot-scope="row">
+              <span><b-button variant = "primary" @click = "checkStatus(row.item.id)">查看状态</b-button></span>
+            </template>
+          </b-table>
+          <b-col md="6" class="my-1">
+            <b-pagination :total-rows="totalMyselfOrderRows" :per-page="perPage" v-model="currentMyselfOrderPage" class="my-0" />
+          </b-col>
+        </b-card>
+      </b-col>
+    </b-row>
     <b-modal id="orderStatusModal" :title="modalInfo.title">
       <p>订单({{orderId}})当前状态为：{{result}}</p>
       <div slot="modal-footer" class="w-100">
@@ -88,24 +36,6 @@
         </b-btn>
       </div>
     </b-modal>
-   <!-- <b-modal id="detailModal" :title="detailModal.title" :size="'lg'">
-      <div class="d-block" v-if="showItem">
-        <b-card-group>
-            <b-list-group-item><label>订单号</label><span class="detailLabel">{{showItem.withdrawFee}}</span></b-list-group-item>
-            <b-list-group-item><label>商户ID</label><span class="detailLabel">{{showItem.rate}}</span></b-list-group-item>
-            <b-list-group-item><label>金额</label><span class="detailLabel">{{showItem.oneLevelWithdrawFee}}</span></b-list-group-item>
-            <b-list-group-item><label>到账金额</label><span class="detailLabel">{{showItem.oneLevelWithdrawFee}}</span></b-list-group-item>
-            <b-list-group-item><label>支付方式</label><span class="detailLabel">{{showItem.oneLevelWithdrawFee}}</span></b-list-group-item>
-            <b-list-group-item><label>费率</label><span class="detailLabel">{{showItem.minRate}}</span></b-list-group-item>
-            <b-list-group-item><label>手续费</label><span class="detailLabel">{{showItem.maxRate}}</span></b-list-group-item>
-            <b-list-group-item><label>订单状态</label><span class="detailLabel">{{showItem.maxRate}}</span></b-list-group-item>
-            <b-list-group-item><label>创建时间</label><span class="detailLabel">{{showItem.oneLevelRate}}</span></b-list-group-item>
-            <b-list-group-item><label>到账时间</label><span class="detailLabel">{{showItem.oneLevelRate}}</span></b-list-group-item>
-            <b-list-group-item><label>失败原因</label><span class="detailLabel">{{showItem.maxRate}}</span></b-list-group-item>
-        </b-card-group>
-      </div>
-    </b-modal>-->
-    <!--</b-modal>-->
   </div>
 
 </template>

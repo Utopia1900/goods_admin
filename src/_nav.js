@@ -3,7 +3,7 @@ export default {
     {
       name: '主页',
       url: '/dashboard',
-      icon: 'icon-speedometer',
+      icon: 'fa fa-home',
       badge: {
         variant: 'primary',
         text: ''
@@ -11,50 +11,50 @@ export default {
     },
     {
       name: '商品管理',
-      icon: 'icon-folder',
+      icon: 'fa fa-product-hunt',
       children: [
         {
           name: '新增商品',
           url: '/goods/add',
-          icon: 'icon-plus'
+          icon: 'fa fa-plus'
         },
         {
           name: '查看商品',
-          url: '/goods/view',
-          icon: 'icon-list'
+          url: '/goods/list',
+          icon: 'fa fa-list'
         }
       ]
     },
     {
       name: '库存管理',
       url: '/inventory',
-      icon: 'icon-direction'
+      icon: 'fa fa-shopping-bag'
     },
     {
       name: '订单管理',
       url: '/order/list',
-      icon: 'icon-book-open'
+      icon: 'fa fa-file-text-o'
     },
     {
       name: '发货管理',
-      icon: 'icon-list',
+      icon: 'fa fa-truck',
       children: [
         {
           name: '发货',
           url: '/shipping/one',
-          icon: 'icon-folder'
+          icon: 'fa fa-share-square'
         },
         {
           name: '批量导入',
           url: '/shipping/uploadDelivery',
-          icon: 'icon-folder'
+          icon: 'fa fa-external-link'
         }
       ]
     },
     {
       name: '客户管理',
       url: '/customers/list',
-      icon: 'icon-people'
+      icon: 'fa fa-users'
     }
   ]
 }

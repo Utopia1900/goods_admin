@@ -75,9 +75,10 @@
       SidebarNavLabel
     },
     methods: {
-      handleClick (e) {
-        e.preventDefault()
-        e.target.parentElement.classList.toggle('open')
+      handleClick(){
+        // e.preventDefault()
+        // e.target.parentElement.classList.toggle('open')
+        console.log('hello world')
       }
     }
   }
