@@ -10,6 +10,11 @@ export default {
       }
     },
     {
+      name: '代理级别管理',
+      url: '/agency',
+      icon: 'fa fa-sitemap'
+    },
+    {
       name: '商品管理',
       icon: 'fa fa-product-hunt',
       children: [
@@ -34,22 +39,6 @@ export default {
       name: '订单管理',
       url: '/order/list',
       icon: 'fa fa-file-text-o'
-    },
-    {
-      name: '发货管理',
-      icon: 'fa fa-truck',
-      children: [
-        {
-          name: '发货',
-          url: '/shipping/one',
-          icon: 'fa fa-share-square'
-        },
-        {
-          name: '批量导入',
-          url: '/shipping/uploadDelivery',
-          icon: 'fa fa-external-link'
-        }
-      ]
     },
     {
       name: '客户管理',

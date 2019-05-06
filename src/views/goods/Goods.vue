@@ -1,25 +1,23 @@
 <template>
   <div class="animated fadeIn">
-    <b-row>
       <b-col sm="12">
-        <b-card v-if="goodsList.length === 0">
+        <div v-if="goodsList.length === 0">
           <span class="fa fa-info">
            暂无数据!
           </span>
-        </b-card>
-        <b-card v-else >
+        </div>
+        <div v-else >
           <b-table hover :items="goodsList" :fields="fields" class="responsive">
             <template slot="action" slot-scope="row">
-              <span><b-button variant = "primary" @click = "updateGood(row.item.id)">修改</b-button></span>
-              <span><b-button variant = "primary" @click = "deleteGood(row.item.id)">删除</b-button></span>
+              <span><b-button variant = "outline-success" @click = "updateGood(row.item.id)">修改</b-button></span>
+              <span><b-button variant = "outline-primary" @click = "deleteGood(row.item.id)">删除</b-button></span>
             </template>
           </b-table>
           <b-col md="6" class="my-1">
             <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
           </b-col>
-        </b-card>
+        </div>
       </b-col>
-    </b-row>
   </div>
 </template>
 
@@ -92,23 +90,3 @@
     }
   }
 </script>
-<style>
-  table.responsive{
-    width: 100%;
-    margin: 0 auto;
-    border: 1px solid #cccccc;
-    border-collapse:collapse;
-    /**
-    box-shadow: 0 0 10px 0 rgba(0,0,0,5);
-    **/
-  }
-  table.responsive th,table.responsive td{
-    border: 1px solid #cccccc;
-    padding: .5em 1em;
-    text-align: center;
-  }
-  /*设置表头背景色*/
-  table.responsive th{
-    background-color: #ffffff;
-  }
-</style>

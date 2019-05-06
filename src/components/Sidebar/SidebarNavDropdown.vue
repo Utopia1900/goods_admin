@@ -27,7 +27,6 @@ export default {
     handleClick (e) {
       e.preventDefault()
       e.target.parentElement.classList.toggle('open')
-      console.log('parent', e.target.parentElement)
     }
   }
 }

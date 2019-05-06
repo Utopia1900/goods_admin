@@ -34,7 +34,6 @@ export default {
       return this.$route.name
     },
     list () {
-      console.log('ss', this.$route.matched)
       return this.$route.matched
     }
   },

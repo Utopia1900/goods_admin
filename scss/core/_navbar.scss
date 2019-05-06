@@ -5,7 +5,6 @@
   padding: 0;
   margin: 0;
   background-color: $navbar-bg;
-  @include borders($navbar-border);
 
   .navbar-brand {
     display: inline-block;
@@ -15,15 +14,14 @@
     margin-right: 0;
     background-color: $navbar-brand-bg;
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: left;
     background-size: $navbar-brand-logo-size;
-    @include borders($navbar-brand-border);
   }
 
   .navbar-toggler {
     min-width: 50px;
     padding: $navbar-toggler-padding-y 0;
-
+    outline: none;
     &:hover .navbar-toggler-icon {
       background-image: $navbar-toggler-icon-hover;
     }
@@ -82,7 +80,9 @@
 
 .navbar-brand {
   color: $navbar-active-color;
-
+  background-color: $navbar-brand-minimized-bg;
+  background-image: $navbar-brand-minimized-logo;
+  background-size: 50%;
   @include hover-focus {
     color: $navbar-active-color;
   }
@@ -115,11 +115,9 @@
   .brand-minimized {
     .app-header.navbar {
       .navbar-brand {
-        width: $navbar-brand-minimized-width;
         background-color: $navbar-brand-minimized-bg;
         background-image: $navbar-brand-minimized-logo;
-        background-size: $navbar-brand-minimized-logo-size;
-        @include borders($navbar-brand-minimized-border);
+        //background-size: 50%;
       }
     }
   }

@@ -6,11 +6,10 @@ import Full from '@/containers/Full'
 // import Dashboard from '@/views/Dashboard'
 // Views - Pages
 import Login from '@/views/Login'
+import AgencyList from '@/views/agency/AgencyList'
 import Add from '@/views/goods/Add'
 import Goods from '@/views/goods/Goods'
 import CustomerList from '@/views/customer/CustomerList'
-import One from '@/views/shipping/One'
-import UploadDelivery from '@/views/shipping/UploadDelivery'
 import OrderList from '@/views/order/OrderList'
 import Inventory from '@/views/inventory/Inventory'
 Vue.use(Router)
@@ -26,15 +25,15 @@ export default new Router({
       component: Login
     },
     {
-      path: '/login',
-      name: 'Login',
-      component: Login
-    },
-    {
       path: '/dashboard',
       name: '主页',
       component: Full,
       children: [
+        {
+          path: '/agency',
+          name: '代理级别管理',
+          component: AgencyList
+        },
         {
           path: '/goods/add',
           name: '新增商品',
@@ -44,16 +43,6 @@ export default new Router({
           path: '/goods/list',
           name: '查看商品',
           component: Goods
-        },
-        {
-          path: '/shipping/one',
-          name: '发货',
-          component: One
-        },
-        {
-          path: '/shipping/uploadDelivery',
-          name: '批量导入',
-          component: UploadDelivery
         },
         {
           path: '/customers/list',
