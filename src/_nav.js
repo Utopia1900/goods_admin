@@ -10,7 +10,7 @@ export default {
       }
     },
     {
-      name: '代理级别管理',
+      name: '代理商管理',
       url: '/agency',
       icon: 'fa fa-sitemap'
     },

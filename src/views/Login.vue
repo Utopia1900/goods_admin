@@ -7,7 +7,6 @@
             <b-card no-body class="p-4">
               <b-card-body>
                 <h4>后台登录</h4>
-                <p class="text-muted">账号登录</p>
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text>

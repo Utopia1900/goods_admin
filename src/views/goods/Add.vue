@@ -25,8 +25,8 @@
           label-align-sm="left"
           :label-cols="1"
         >
-          <b-button variant="success" @click="$root.$emit('bv::show::modal', 'modal-1')">点击设置</b-button>
-          <b-modal id="modal-1" title="设置价格">
+          <b-button variant="success" @click="$root.$emit('bv::show::modal', 'price_modal')">点击设置</b-button>
+          <b-modal id="price_modal" centered title="设置价格">
             <p class="my-4">
               <b-table hover :items="agencyList" :fields="fields" class="responsive">
                 <template slot="retail_price" slot-scope="row">
@@ -38,11 +38,11 @@
               </b-table>
             </p>
             <div slot="modal-footer" class="w-100">
-              <b-btn size="md" class="float-right" variant="outline-danger"
-                     @click="$root.$emit('bv::hide::modal', 'modal-1')">
+              <b-btn size="md" class="float-right" variant="danger"
+                     @click="$root.$emit('bv::hide::modal', 'price_modal')">
                 取消
               </b-btn>
-              <b-btn size="md" class="float-right" variant="outline-primary" @click="ok">
+              <b-btn size="md" class="float-right" variant="primary" @click="ok">
                 确定
               </b-btn>
             </div>
@@ -86,9 +86,9 @@
           </div>
         </b-form-group>
         <div slot="footer" style="text-align: center">
-          <b-button type="submit" size="sm" variant="outline-info" @click="add"><i class="fa fa-dot-circle-o"></i> 新增
+          <b-button type="submit" size="sm" variant="primary" @click="add"><i class="fa fa-dot-circle-o"></i> 新增
           </b-button>
-          <b-button type="reset" size="sm" variant="outline-danger" @click="reset"><i class="fa fa-ban"></i> 重置
+          <b-button type="reset" size="sm" variant="danger" @click="reset"><i class="fa fa-ban"></i> 重置
           </b-button>
         </div>
       </div>
@@ -97,7 +97,6 @@
 </template>
 
 <script>
-  require('@/config/currency-validator.js')
   export default {
     name: 'add',
     data () {

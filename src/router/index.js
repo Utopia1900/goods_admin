@@ -31,7 +31,7 @@ export default new Router({
       children: [
         {
           path: '/agency',
-          name: '代理级别管理',
+          name: '代理商管理',
           component: AgencyList
         },
         {

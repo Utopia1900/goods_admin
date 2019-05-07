@@ -18,13 +18,13 @@
       </b-col>
     </div>
     <div style="padding: 15px;border-top: 1px solid #a4b7c1">
-      <b-button variant="outline-primary" @click="addLevel">添加级别</b-button>
-      <b-modal id="modal-1" title="填写级别信息">
+      <b-button variant="primary" @click="addLevel">添加级别</b-button>
+      <b-modal id="level_modal" centered title="填写级别信息">
         <p class="my-4">
           <b-form-group
             label-cols-sm="2"
             label="名称:"
-            label-align-sm="right"
+            label-align-sm="center"
             label-for="level_name"
           >
             <b-form-input id="level_name"></b-form-input>
@@ -33,17 +33,17 @@
           <b-form-group
             label-cols-sm="2"
             label="描述:"
-            label-align-sm="right"
+            label-align-sm="center"
             label-for="level_desc"
           >
             <b-form-input id="level_desc"></b-form-input>
           </b-form-group>
         </p>
         <div slot="modal-footer" class="w-100">
-          <b-btn size="md" class="float-right" variant="outline-danger" @click="cancel">
+          <b-btn size="md" class="float-right" variant="danger" @click="cancel">
             取消
           </b-btn>
-          <b-btn size="md" class="float-right" variant="outline-primary" @click="ok">
+          <b-btn size="md" class="float-right" variant="primary" @click="ok">
             确定
           </b-btn>
         </div>
@@ -74,13 +74,13 @@
     },
     methods: {
       addLevel () {
-        this.$root.$emit('bv::show::modal', 'modal-1')
+        this.$root.$emit('bv::show::modal', 'level_modal')
       },
       ok () {
 
       },
       cancel () {
-        this.$root.$emit('bv::hide::modal', 'modal-1')
+        this.$root.$emit('bv::hide::modal', 'level_modal')
       }
     }
   }
