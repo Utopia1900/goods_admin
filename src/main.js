@@ -4,13 +4,12 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
-import VueLidate from 'vuelidate'
-
-// import upperFirst from ''
+import http from './http'
+Vue.prototype.$http = http
 
 import './css/custom.css'
 Vue.use(BootstrapVue)
-Vue.use(VueLidate)
+
 
 /* eslint-disable no-new */
 new Vue({
@@ -21,5 +20,3 @@ new Vue({
     App
   }
 })
-
-// const requireComponent = require.content

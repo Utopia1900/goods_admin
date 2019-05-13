@@ -14,7 +14,7 @@ import OrderList from '@/views/order/OrderList'
 import Inventory from '@/views/inventory/Inventory'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'hash', // Demo is living in GitHub.io, so required!
   linkActiveClass: 'false active',
   scrollBehavior: () => ({ y: 0 }),
@@ -32,6 +32,9 @@ export default new Router({
         {
           path: '/agency',
           name: '代理商管理',
+          meta: {
+            requireAuth: true
+          },
           component: AgencyList
         },
         {
@@ -63,3 +66,32 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    let token = window.sessionStorage.getItem('token')
+    if (token){
+      next()
+    } else {
+      next({
+        path: '/',
+        query: {redirect: to.fullPath}
+      })
+    }
+  } else {
+    next()
+  }
+})
+
+export default router
+
+
+
+
+
+
+
+
+
+
+
