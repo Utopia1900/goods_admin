@@ -73,6 +73,26 @@
       }
     },
     methods: {
+      getAgencyLevel () {
+        let _this = this
+        let token = window.sessionStorage.getItem('token')
+        let options = {
+          method: 'POST',
+          data: JSON.stringify({ token }),
+          url: '/getAgency'
+        }
+        this.$http(options).then(res => {
+          let data = res.data
+          if (!data.errcode) {
+            // code here
+          } else {
+            // error code here
+          }
+        }).catch(e => {
+          console.error(e)
+        })
+
+      },
       addLevel () {
         this.$root.$emit('bv::show::modal', 'level_modal')
       },
@@ -82,6 +102,9 @@
       cancel () {
         this.$root.$emit('bv::hide::modal', 'level_modal')
       }
+    },
+    created () {
+      this.getAgencyLevel()
     }
   }
 </script>

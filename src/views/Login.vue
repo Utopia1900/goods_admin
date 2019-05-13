@@ -90,18 +90,13 @@
 </template>
 
 <script>
+import md5 from 'blueimp-md5';
 export default {
   name: "login",
   data() {
     return {
-      username:
-        window.sessionStorage.getItem("login_username") !== null
-          ? window.sessionStorage.getItem("login_username")
-          : "",
-      password:
-        window.sessionStorage.getItem("login_psd") !== null
-          ? window.sessionStorage.getItem("login_psd")
-          : "",
+      username: "",
+      password: "",
       errmsg: "",
       hasError: false,
       modalVisible: false,
@@ -113,7 +108,34 @@ export default {
       this.$root.$emit("bv::hide::modal", "loginErrModal");
     },
     login() {
-      this.$router.push("/dashboard");
+      let _this = this
+      if (this.hasError) this.hasError = !this.hasError
+      if (this.username === '' || this.password === ''){
+        this.errmsg = '用户名和密码不能为空';
+        this.hasError = true
+        return
+      }
+      let formData = {
+        username: this.username,
+        password: md5(this.password)
+      }
+      let options = {
+        method: 'POST',
+        data: JSON.stringify(formData),
+        url: '/adminLogin'
+      }
+      this.$http(options).then(res => {
+        let data = res.data
+        if (!data.errcode){
+          window.sessionStorage.setItem('token', data.token);
+          _this.$router.push("/dashboard");
+        } else {
+          _this.errmsg = data.errmsg;
+          _this.hasError = true
+        }
+      }).catch(e => {
+        console.error(e)
+      })
     }
   }
 };

@@ -20,22 +20,30 @@
           <b-form-input id="desc" v-model.trim="desc" type="text"></b-form-input>
         </b-form-group>
         <b-form-group
-          label="价格:"
+          label="零售价格:"
+          label-for="retailPrice"
+          label-align-sm="left"
+          :label-cols="1"
+        >
+          <b-form-input id="retailPrice" v-model.trim="retailPrice" type="text"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="设置会员价:"
           label-for="price"
           label-align-sm="left"
           :label-cols="1"
         >
           <b-button variant="success" @click="$root.$emit('bv::show::modal', 'price_modal')">点击设置</b-button>
-          <b-modal id="price_modal" centered title="设置价格">
-            <p class="my-4">
+          <b-modal id="price_modal" centered title="设置会员价">
+            <p class="my-4" v-if="agencyList.length !==0">
               <b-table hover :items="agencyList" :fields="fields" class="responsive">
-                <template slot="retail_price" slot-scope="row">
-                  <input type="number" class="price_input" v-model="row.item.retail_price"/>
-                </template>
                 <template slot="sale_price" slot-scope="row">
                   <input type="number" class="price_input" v-model="row.item.sale_price"/>
                 </template>
               </b-table>
+            </p>
+            <p v-else>
+              请先到【代理商管理】模块中添加代理级别
             </p>
             <div slot="modal-footer" class="w-100">
               <b-btn size="md" class="float-right" variant="danger"
@@ -49,24 +57,6 @@
           </b-modal>
         </b-form-group>
 
-        <b-form-group
-          label="缩略图:"
-          label-for="headImgUrl"
-          label-align-sm="left"
-          :label-cols="1"
-        >
-          <b-form-file
-            v-model="headImgUrl"
-            ref="file-input"
-            class="mb-2"
-            @change="changeImage($event, 'headImg')"
-            accept="image/gif,image/jpeg,image/jpg,image/png"
-            placeholder="选择图片上传..."
-          ></b-form-file>
-          <div ref="headimage_holder" id="headimage_holder">
-
-          </div>
-        </b-form-group>
         <b-form-group
           label="产品图:"
           label-for="imgUrl"
@@ -85,6 +75,44 @@
 
           </div>
         </b-form-group>
+        <b-form-group
+          label="缩略图:"
+          label-for="headImgUrl"
+          label-align-sm="left"
+          :label-cols="1"
+        >
+          <b-form-file
+            v-model="headImgUrl"
+            ref="file-input"
+            class="mb-2"
+            @change="changeImage($event, 'headImg')"
+            accept="image/gif,image/jpeg,image/jpg,image/png"
+            placeholder="选择图片上传..."
+          ></b-form-file>
+          <div ref="headimage_holder" id="headimage_holder">
+
+          </div>
+        </b-form-group>
+
+        <b-form-group
+          label="详情图:"
+          label-for="detailUrl"
+          label-align-sm="left"
+          :label-cols="1"
+        >
+          <b-form-file
+            v-model="detailUrl"
+            ref="file-input"
+            class="mb-2"
+            @change="changeImage($event, 'detail')"
+            accept="image/gif,image/jpeg,image/jpg,image/png"
+            placeholder="选择图片上传..."
+          ></b-form-file>
+          <div ref="detail_holder" id="detail_holder">
+
+          </div>
+        </b-form-group>
+
         <div slot="footer" style="text-align: center">
           <b-button type="submit" size="sm" variant="primary" @click="add"><i class="fa fa-dot-circle-o"></i> 新增
           </b-button>
@@ -104,13 +132,11 @@
         name: '',
         desc: '',
         price: '',
+        retailPrice: '',
         headImgUrl: null,
         imgUrl: null,
-        agencyList: [
-          {name: '代理级别0'},
-          {name: '代理级别1'},
-          {name: '代理级别2'}
-        ],
+        detailUrl: null,
+        agencyList: [],
         fields: [
           {
             key: 'name',
@@ -144,11 +170,33 @@
                 that.$refs['image_holder'].appendChild(img)
               } else if (type == 'headImg') {
                 that.$refs['headimage_holder'].appendChild(img)
+              } else if (type == 'detail') {
+                that.$refs['detail_holder'].appendChild(img)
               }
             }
             reader.readAsDataURL(e.target.files[i])
           }
         }
+      },
+      getAgencyLevel () {
+        let token = window.sessionStorage.setItem('token')
+        let _this = this
+        let options = {
+          method: 'POST',
+          data: JSON.stringify({ token }),
+          url: '/getAgency'
+        }
+        this.$http(options).then(res => {
+          let data = res.data
+          if (!data.errcode) {
+            // code here
+            _this.agencyList = data
+          } else {
+            // error msg code
+          }
+        }).catch(e => {
+          console.error(e)
+        })
       },
       ok () {
         return alert('确定提交吗?')
@@ -169,7 +217,7 @@
     height: 200px;
   }
 
-  #headimage_holder img, #image_holder img {
+  #headimage_holder img, #image_holder img, #detail_holder img{
     display: inline-block;
     padding: 10px;
     background-color: #ccc;
@@ -177,7 +225,11 @@
     height: 180px;
     width: 160px;
   }
+
   .price_input {
-    width: 80px;outline: none;font-size: 13px;text-indent: 5px;
+    width: 80px;
+    outline: none;
+    font-size: 13px;
+    text-indent: 5px;
   }
 </style>
