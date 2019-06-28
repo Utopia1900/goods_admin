@@ -6,7 +6,7 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <h4>后台登录</h4>
+                <h4>登录</h4>
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text>
@@ -77,15 +77,6 @@
         </b-col>
       </b-row>
     </div>
-    <div>
-      <b-modal id="loginErrModal" :title="'提示'">
-        <pre>服务器连接超时、请确认后重试！</pre>
-        <div slot="modal-footer" class="w-100">
-          <p class="float-left"></p>
-          <b-btn size="md" class="float-right" variant="primary" @click="closeLoginErrModal">知道了</b-btn>
-        </div>
-      </b-modal>
-    </div>
   </div>
 </template>
 
@@ -104,9 +95,6 @@ export default {
     };
   },
   methods: {
-    closeLoginErrModal() {
-      this.$root.$emit("bv::hide::modal", "loginErrModal");
-    },
     login() {
       let _this = this
       if (this.hasError) this.hasError = !this.hasError
@@ -115,17 +103,18 @@ export default {
         this.hasError = true
         return
       }
+      this.isLoginBtnClicked = true
       let formData = {
         username: this.username,
         password: md5(this.password)
       }
       let options = {
-        method: 'POST',
+        method: 'post',
         data: JSON.stringify(formData),
         url: '/adminLogin'
       }
       this.$http(options).then(res => {
-        let data = res.data
+        var data = res.data
         if (!data.errcode){
           window.sessionStorage.setItem('token', data.token);
           _this.$router.push("/dashboard");
@@ -133,8 +122,10 @@ export default {
           _this.errmsg = data.errmsg;
           _this.hasError = true
         }
+        _this.isLoginBtnClicked = false
       }).catch(e => {
         console.error(e)
+        _this.isLoginBtnClicked = false
       })
     }
   }

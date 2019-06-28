@@ -1,10 +1,10 @@
 import axios from 'axios'
 import router from './router'
-const url = '/admin/v1/' // 接口地址（生产）
-const testUrl = 'https://www.baidu.com/admin/v1/' // 接口地址（测试）
+// const prodUrl = '/admin/1/' // 接口地址（生产）
+const devUrl = 'http://www.stemtherapy.cn/mx/admin/1/' // 接口地址（开发）
 
 axios.defaults.timeout = 8 * 1000
-axios.defaults.baseURL = testUrl
+axios.defaults.baseURL = devUrl
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use(config => {

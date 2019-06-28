@@ -9,8 +9,12 @@
         </div>
         <div v-else>
           <b-table hover :items="goodsList" :fields="fields" class="responsive">
+            <tempalte slot="imgUrl" slot-scope="row">
+              <span><img :src=row.item.imgUrl alt="img"></span>
+            </tempalte>
             <template slot="action" slot-scope="row">
-              <span><b-button variant="success" @click="setProductStatus(0, row.item.id)">下架</b-button></span>
+              <span><b-button variant="success" @click="setProductStatus(1, row.item.id)">下架</b-button></span>
+              <span><b-button variant="danger" @click="openPurcaseModal(row.item)">采购</b-button></span>
             </template>
           </b-table>
         </div>
@@ -24,21 +28,29 @@
         <div v-else>
           <b-table hover :items="goodsList" :fields="fields" class="responsive">
             <template slot="action" slot-scope="row">
-              <span><b-button variant="success" @click="setProductStatus(1, row.item.id)">上架</b-button></span>
-              <span><b-button variant="danger" @click="purchase(row.item)">补货</b-button></span>
+              <span><b-button variant="success" @click="setProductStatus(0, row.item.id)">上架</b-button></span>
+              <span><b-button variant="danger" @click="openPurcaseModal(row.item)">采购</b-button></span>
             </template>
           </b-table>
         </div>
       </b-tab>
     </b-tabs>
-
-    <b-modal id="restock_modal" centered title="填写进货信息">
+    <b-alert
+      variant="info"
+      dismissible
+      :show="hasError"
+      @dismissed="hasError=false"
+    >{{errmsg}}
+    </b-alert>
+    <b-modal id="restock_modal" centered title="填写采购信息">
       <p v-if="selectedGood">
         <b-list-group>
           <b-list-group-item><span>商品名：</span>{{selectedGood.name}}</b-list-group-item>
-          <b-list-group-item><span>成本价(元/件)：</span>{{selectedGood.costPrice}}</b-list-group-item>
+          <b-list-group-item><span>成本价(元/件)：</span>
+            <input type="text" v-model.trim="costPrice" />
+          </b-list-group-item>
           <b-list-group-item>
-            <span>选择进货数量(件)：</span>
+            <span>选择采购数量(件)：</span>
             <span>
                <i class="num_button fa fa-minus" @click="reduceNum"></i>
                <i><input type="text" class="num_input" v-model="num"/></i>
@@ -52,7 +64,7 @@
                @click="hideRestockModal">
           取消
         </b-btn>
-        <b-btn size="md" class="float-right" variant="primary" @click="">
+        <b-btn size="md" class="float-right" variant="primary" @click="purchase(selectedGood)">
           确定
         </b-btn>
       </div>
@@ -67,11 +79,13 @@
     name: 'goods',
     data: () => {
       return {
-        goodsList: [{ id: '1', name: '产品1', desc: '产品1是一款好产品', costPrice: '111' },
-          { id: '2', name: '产品2', desc: '产品2是一款好产品', costPrice: '222' },
-          { id: '3', name: '产品3', desc: '产品3是一款好产品', costPrice: '333' }],
+        goodsList: [],
         num: 0,
         selectedGood: null,
+        hasError: false,
+        errmsg: '',
+        productId: null,
+        costPrice: '',
         fields: [
           {
             key: 'name',
@@ -89,14 +103,19 @@
             class: 'imgUrl'
           },
           {
+            key: 'retailPrice',
+            label: '零售价',
+            class: 'retailPrice'
+          },
+          {
             key: 'price',
-            label: '价格',
+            label: '级别价',
             class: 'price'
           },
           {
-            key: 'oriPrice',
-            label: '折扣价',
-            class: 'oriPrice'
+            key: 'inventory',
+            label: '库存(件)',
+            class: 'inventory'
           },
           {
             key: 'action',
@@ -117,7 +136,7 @@
         this.$http(options).then(res => {
           let data = res.data
           if (!data.errcode) {
-
+            _this.goodsList = data
           } else {
 
           }
@@ -126,7 +145,6 @@
         })
       },
       setProductStatus (status, productId) {
-        let _this = this
         let options = {
           url: '/setProductStatus',
           method: 'POST',
@@ -135,49 +153,75 @@
         this.$http(options).then(res => {
           let data = res.data
           if (!data.errcode) {
-
+            if (status === 0) {
+              this.errmsg = '上架成功'
+            } else if (status === 1) {
+              this.errmsg = '下架成功'
+            }
+            this.goodsList = this.goodsList.filter(item => {
+              return item.id !== productId
+            })
           } else {
+            this.errmsg = data.errmsg
+          }
+          this.hasError = true
+          setTimeout(() => {
+            this.hasError = false
+            this.errmsg = ''
+          }, 1500)
+        }).catch(e => {
+          console.error(e)
+        })
+      },
+      openPurcaseModal (good) {
+        this.num = 0
+        this.costPrice = ''
+        this.selectedGood = good
+        this.$root.$emit('bv::show::modal', 'restock_modal')
+      },
+      purchase (selectedGood) {
+        if (this.num === 0) return alert('请选择采购数量')
+        if(!this.costPrice) return alert('请填写成本价')
+        let formData = {
+          token,
+          productId: selectedGood.id,
+          costPrice: this.costPrice,
+          num: this.num,
+          entryDate: '20190630'
+        }
+        let options = {
+          url: '/purchase',
+          method: 'post',
+          data: JSON.stringify(formData)
+        }
 
+        this.$http(options).then(res => {
+          var data = res.data
+          if (!data.errcode) {
+            this.errmsg = '采购成功'
+            this.hideRestockModal()
+            selectedGood.inventory += this.num
+            this.hasError = true
+            setTimeout(() => {
+              this.hasError = false
+              this.errmsg = ''
+            }, 1500)
+          } else {
+            alert(data.errmsg)
           }
         }).catch(e => {
           console.error(e)
         })
       },
-      purchase (good) {
-        this.num = 0
-        this.selectedGood = good
-        this.$root.$emit('bv::show::modal', 'restock_modal')
-        let _this = this
-        let formData = {
-          token,
-          productId: good.productId,
-          costPrice: good.costPrice,
-          num: this.num
-        }
-        let options = {
-          url: '/pirchase',
-          method: 'POST',
-          data: JSON.stringify(formData)
-        }
-      },
-      hideRestockModal(){
-        this.num = 0
-        this.selectedGood = null
+      hideRestockModal () {
         this.$root.$emit('bv::hide::modal', 'restock_modal')
       },
-      showRestockModal(good){
-        this.num = 0
-        this.selectedGood = good
-        this.$root.$emit('bv::show::modal', 'restock_modal')
+      addNum () {
+        this.num++
       },
-      addNum(){
-        this.num ++
-      },
-      reduceNum(){
-        if(this.num==0){
-          return
-        }
-        this.num --
+      reduceNum () {
+        if (this.num === 0) return
+        this.num--
       }
     },
     created () {
@@ -186,19 +230,21 @@
   }
 </script>
 <style scoped>
-  .list-group-item span{
+  .list-group-item span {
     width: 150px;
     display: inline-block;
     color: #676565;
   }
-  .num_input{
+
+  .num_input {
     width: 45px;
     height: 25px;
     margin: 0;
     display: inline-block;
     text-indent: 5px;
   }
-  .num_button{
+
+  .num_button {
     font-size: 15px;
     display: inline-block;
     height: 27px;
@@ -208,10 +254,12 @@
     line-height: 27px;
     outline: none;
   }
-  .num_button:hover{
+
+  .num_button:hover {
     cursor: pointer;
   }
-  .num_button:active{
+
+  .num_button:active {
     background-color: #666;
     color: #fff;
 

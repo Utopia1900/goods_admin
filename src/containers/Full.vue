@@ -30,16 +30,8 @@ export default {
     }
   },
   computed: {
-    name () {
-      return this.$route.name
-    },
     list () {
       return this.$route.matched
-    }
-  },
-  methods: {
-    formatNumber (value) {
-      return (Number(value) / 100).toFixed(2)
     }
   },
   created () {

@@ -8,7 +8,7 @@
           label-align-sm="left"
           :label-cols="1"
         >
-          <b-form-input id="name" v-model.trim="name" type="text" autofocus="autofocus"
+          <b-form-input id="name" v-model.trim="name" ref="name" type="text" autofocus="autofocus"
                         autocomplete="off"></b-form-input>
         </b-form-group>
         <b-form-group
@@ -28,13 +28,13 @@
           <b-form-input id="retailPrice" v-model.trim="retailPrice" type="text"></b-form-input>
         </b-form-group>
         <b-form-group
-          label="设置会员价:"
+          label="设置级别价:"
           label-for="price"
           label-align-sm="left"
           :label-cols="1"
         >
-          <b-button variant="success" @click="$root.$emit('bv::show::modal', 'price_modal')">点击设置</b-button>
-          <b-modal id="price_modal" centered title="设置会员价">
+          <b-button variant="success" @click="openAgencyDialog">点击设置</b-button>
+          <b-modal id="price_modal" centered title="设置级别价">
             <p class="my-4" v-if="agencyList.length !==0">
               <b-table hover :items="agencyList" :fields="fields" class="responsive">
                 <template slot="sale_price" slot-scope="row">
@@ -47,7 +47,7 @@
             </p>
             <div slot="modal-footer" class="w-100">
               <b-btn size="md" class="float-right" variant="danger"
-                     @click="$root.$emit('bv::hide::modal', 'price_modal')">
+                     @click="closeAgencyDialog">
                 取消
               </b-btn>
               <b-btn size="md" class="float-right" variant="primary" @click="ok">
@@ -63,14 +63,15 @@
           label-align-sm="left"
           :label-cols="1"
         >
-          <b-form-file
+          <!--<b-form-file
             v-model="imgUrl"
             ref="file-input"
             class="mb-2"
             @change="changeImage($event, 'img')"
             accept="image/gif,image/jpeg,image/jpg,image/png"
             placeholder="选择图片上传..."
-          ></b-form-file>
+          ></b-form-file>-->
+          <b-form-input id="imgUrl" v-model.trim="imgUrl" type="text"></b-form-input>
           <div ref="image_holder" id="image_holder">
 
           </div>
@@ -81,14 +82,15 @@
           label-align-sm="left"
           :label-cols="1"
         >
-          <b-form-file
-            v-model="headImgUrl"
-            ref="file-input"
-            class="mb-2"
-            @change="changeImage($event, 'headImg')"
-            accept="image/gif,image/jpeg,image/jpg,image/png"
-            placeholder="选择图片上传..."
-          ></b-form-file>
+          <!-- <b-form-file
+             v-model="headImgUrl"
+             ref="file-input"
+             class="mb-2"
+             @change="changeImage($event, 'headImg')"
+             accept="image/gif,image/jpeg,image/jpg,image/png"
+             placeholder="选择图片上传..."
+           ></b-form-file>-->
+          <b-form-input id="headImgUrl" v-model.trim="headImgUrl" type="text"></b-form-input>
           <div ref="headimage_holder" id="headimage_holder">
 
           </div>
@@ -100,25 +102,33 @@
           label-align-sm="left"
           :label-cols="1"
         >
-          <b-form-file
+          <!--<b-form-file
             v-model="detailUrl"
             ref="file-input"
             class="mb-2"
             @change="changeImage($event, 'detail')"
             accept="image/gif,image/jpeg,image/jpg,image/png"
             placeholder="选择图片上传..."
-          ></b-form-file>
+          ></b-form-file>-->
+          <b-form-input id="detailUrl" v-model.trim="detailUrl" type="text"></b-form-input>
           <div ref="detail_holder" id="detail_holder">
 
           </div>
         </b-form-group>
-
+        <b-alert
+          variant="info"
+          dismissible
+          :show="hasError"
+          @dismissed="hasError=false"
+        >{{errmsg}}
+        </b-alert>
         <div slot="footer" style="text-align: center">
           <b-button type="submit" size="sm" variant="primary" @click="add"><i class="fa fa-dot-circle-o"></i> 新增
           </b-button>
           <b-button type="reset" size="sm" variant="danger" @click="reset"><i class="fa fa-ban"></i> 重置
           </b-button>
         </div>
+
       </div>
     </b-col>
   </div>
@@ -131,24 +141,26 @@
       return {
         name: '',
         desc: '',
-        price: '',
+        price: {},
         retailPrice: '',
         headImgUrl: null,
         imgUrl: null,
         detailUrl: null,
         agencyList: [],
+        hasError: false,
+        errmsg: '',
         fields: [
           {
-            key: 'name',
+            key: 'id',
             label: '级别'
           },
           {
-            key: 'retail_price',
-            label: '零售价(元)'
+            key: 'name',
+            label: '级别名称'
           },
           {
             key: 'sale_price',
-            label: '销售价(元)'
+            label: '级别价(元)'
           }
         ]
       }
@@ -178,13 +190,19 @@
           }
         }
       },
+      openAgencyDialog () {
+        this.$root.$emit('bv::show::modal', 'price_modal')
+      },
+      closeAgencyDialog () {
+        this.$root.$emit('bv::hide::modal', 'price_modal')
+      },
       getAgencyLevel () {
-        let token = window.sessionStorage.setItem('token')
+        let token = window.sessionStorage.getItem('token')
         let _this = this
         let options = {
           method: 'POST',
           data: JSON.stringify({ token }),
-          url: '/getAgency'
+          url: '/getAgencyLevel'
         }
         this.$http(options).then(res => {
           let data = res.data
@@ -199,14 +217,60 @@
         })
       },
       ok () {
-        return alert('确定提交吗?')
+        let _this = this
+        let agencyList = this.agencyList
+        const priceList = agencyList.filter(function (item) {
+          return item.sale_price
+        })
+        for (var i = 0; i < priceList.length; i++) {
+          this.price[priceList[i].id] = parseInt(priceList[i].sale_price).toFixed(2)
+        }
+        this.$root.$emit('bv::hide::modal', 'price_modal')
+        // var price = this.agencyList.
       },
       add () {
-        console.log(this.imgUrl.name)
+        let name = this.name
+        let desc = this.desc
+        let retailPrice = this.retailPrice
+        let imgUrl = this.imgUrl
+        let detailUrl = this.detailUrl
+        let headImgUrl = this.headImgUrl
+        let price = this.price
+        if (name === '' || desc === '' || retailPrice === '' || !imgUrl || !detailUrl || !headImgUrl) {
+          return alert('请完整填写商品信息')
+        }
+        let token = window.sessionStorage.getItem('token')
+        let formData = { token, name, desc, retailPrice, imgUrl, detailUrl, headImgUrl, price }
+        let options = {
+          method: 'post',
+          data: JSON.stringify(formData),
+          url: '/addProduct'
+        }
+        this.$http(options).then(res => {
+          var data = res.data
+          if (!data.errcode) {
+            this.errmsg = '添加成功'
+          } else {
+            this.errmsg = data.errmsg
+          }
+          this.hasError = true
+        }).catch(e => {
+          console.error(e)
+        })
       },
       reset () {
-        console.log('reset')
+        this.name = ''
+        this.desc = ''
+        this.retailPrice = ''
+        this.imgUrl = ''
+        this.detailUrl = ''
+        this.headImgUrl = ''
+        this.price = {}
+        this.$refs.name.focus()
       }
+    },
+    created () {
+      this.getAgencyLevel()
     }
   }
 </script>
@@ -217,7 +281,7 @@
     height: 200px;
   }
 
-  #headimage_holder img, #image_holder img, #detail_holder img{
+  #headimage_holder img, #image_holder img, #detail_holder img {
     display: inline-block;
     padding: 10px;
     background-color: #ccc;

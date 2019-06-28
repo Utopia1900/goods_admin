@@ -29,7 +29,6 @@
           >
             <b-form-input id="level_name"></b-form-input>
           </b-form-group>
-
           <b-form-group
             label-cols-sm="2"
             label="描述:"
@@ -60,14 +59,14 @@
         agencyList: [],
         fields: [
           {
+            key: 'id',
+            label:'级别',
+            class: 'id'
+          },
+          {
             key: 'name',
             label: '名称',
             class: 'name'
-          },
-          {
-            key: 'desc',
-            label: '描述',
-            class: 'desc'
           }
         ]
       }
@@ -75,16 +74,16 @@
     methods: {
       getAgencyLevel () {
         let _this = this
-        let token = window.sessionStorage.getItem('token')
+        const token = window.sessionStorage.getItem('token')
         let options = {
           method: 'POST',
           data: JSON.stringify({ token }),
-          url: '/getAgency'
+          url: '/getAgencyLevel'
         }
         this.$http(options).then(res => {
           let data = res.data
           if (!data.errcode) {
-            // code here
+            _this.agencyList = data
           } else {
             // error code here
           }
