@@ -87,7 +87,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    let token = window.sessionStorage.getItem('token')
+    const token = window.sessionStorage.getItem('token')
     if (token){
       next()
     } else {

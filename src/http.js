@@ -8,7 +8,7 @@ axios.defaults.baseURL = devUrl
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use(config => {
-  let token = window.sessionStorage.getItem('token')
+  const token = window.sessionStorage.getItem('token')
   if(token) {
    config.headers.common['Authorization'] = token
   }

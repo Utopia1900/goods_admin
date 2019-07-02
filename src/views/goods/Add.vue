@@ -197,7 +197,7 @@
         this.$root.$emit('bv::hide::modal', 'price_modal')
       },
       getAgencyLevel () {
-        let token = window.sessionStorage.getItem('token')
+        const token = window.sessionStorage.getItem('token')
         let _this = this
         let options = {
           method: 'POST',
@@ -239,7 +239,7 @@
         if (name === '' || desc === '' || retailPrice === '' || !imgUrl || !detailUrl || !headImgUrl) {
           return alert('请完整填写商品信息')
         }
-        let token = window.sessionStorage.getItem('token')
+        const token = window.sessionStorage.getItem('token')
         let formData = { token, name, desc, retailPrice, imgUrl, detailUrl, headImgUrl, price }
         let options = {
           method: 'post',
