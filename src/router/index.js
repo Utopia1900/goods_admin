@@ -28,7 +28,7 @@ const router = new Router({
       path: '/dashboard',
       name: '主页',
       meta: {
-        requireAuth: false
+        requireAuth: true
       },
       component: Full,
       children: [
@@ -36,7 +36,7 @@ const router = new Router({
           path: '/agency',
           name: '代理商管理',
           meta: {
-            requireAuth: false
+            requireAuth: true
           },
           component: AgencyList
         },
@@ -44,7 +44,7 @@ const router = new Router({
           path: '/goods/add',
           name: '新增商品',
           meta: {
-            requireAuth: false
+            requireAuth: true
           },
           component: Add
         },
@@ -52,7 +52,7 @@ const router = new Router({
           path: '/goods/list',
           name: '查看商品',
           meta: {
-            requireAuth: false
+            requireAuth: true
           },
           component: Goods
         },
@@ -60,7 +60,7 @@ const router = new Router({
           path: '/customers/list',
           name: '客户管理',
           meta: {
-            requireAuth: false
+            requireAuth: true
           },
           component: CustomerList
         },
@@ -68,7 +68,7 @@ const router = new Router({
           path: '/order/list',
           name: '订单管理',
           meta: {
-            requireAuth: false
+            requireAuth: true
           },
           component: OrderList
         },
@@ -76,7 +76,7 @@ const router = new Router({
           path: '/inventory',
           name: '库存信息',
           meta: {
-            requireAuth: false
+            requireAuth: true
           },
           component: Inventory
         }
@@ -92,9 +92,9 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next({
-        path: '/',
-        query: {redirect: to.fullPath}
+        path: '/'
       })
+      alert('请先登录')
     }
   } else {
     next()
