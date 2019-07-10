@@ -12,6 +12,11 @@
                 <img :src="row.item.imgUrl" alt="img">
               </span>
             </template>
+            <template slot="price" slot-scope="row">
+              <ul v-for="(item, index) in formatPrice(row.item.price)" :key="index">
+                <li>{{item.name}}:￥{{item.price}}</li>
+              </ul>
+            </template>
             <template slot="action" slot-scope="row">
               <span>
                 <b-button variant="success" @click="setProductStatus(1, row.item.id)">下架</b-button>
@@ -29,6 +34,16 @@
         </div>
         <div v-else>
           <b-table hover :items="goodsList" :fields="fields" class="responsive">
+             <template slot="imgUrl" slot-scope="row">
+              <span>
+                <img :src="row.item.imgUrl" alt="img">
+              </span>
+            </template>
+             <template slot="price" slot-scope="row">
+              <ul v-for="(item, index) in formatPrice(row.item.price)" :key="index">
+                <li>{{item.name}}:￥{{item.price}}</li>
+              </ul>
+            </template>
             <template slot="action" slot-scope="row">
               <span>
                 <b-button variant="success" @click="setProductStatus(0, row.item.id)">上架</b-button>
@@ -220,6 +235,15 @@ export default {
           console.error(e);
         });
     },
+    formatPrice(price){
+      let agency = JSON.parse(window.sessionStorage.getItem('agency'))
+      var arr = []
+      for(let key in price){
+        arr.push({name:agency[key], price:price[key]})
+      }
+      console.log('arr', arr)
+      return arr
+    },
     hideRestockModal() {
       this.$root.$emit("bv::hide::modal", "restock_modal");
     },
@@ -269,5 +293,12 @@ export default {
 .num_button:active {
   background-color: #666;
   color: #fff;
+}
+
+ul{
+  list-style-type: none
+}
+img{
+  width: 200px;
 }
 </style>

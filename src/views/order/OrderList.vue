@@ -23,7 +23,7 @@
       }
     },
     created(){
-      console.log(this.formatDate(new Date()))
+      
     }
   }
 </script>

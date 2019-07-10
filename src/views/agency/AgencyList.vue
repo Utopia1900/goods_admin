@@ -23,7 +23,7 @@
         <p class="my-4">
           <b-form-group
             label-cols-sm="2"
-            label="名称:"
+            label="级别:"
             label-align-sm="center"
             label-for="level_name"
           >
@@ -59,13 +59,13 @@
         agencyList: [],
         fields: [
           {
-            key: 'id',
+            key: 'name',
             label:'级别',
             class: 'id'
           },
           {
-            key: 'name',
-            label: '名称',
+            key: 'desc',
+            label: '描述',
             class: 'name'
           }
         ]

@@ -34,8 +34,35 @@ export default {
       return this.$route.matched
     }
   },
+  methods:{
+     getAgencyLevel () {
+        const token = window.sessionStorage.getItem('token')
+        let options = {
+          method: 'POST',
+          data: JSON.stringify({ token }),
+          url: '/getAgencyLevel'
+        }
+        this.$http(options).then(res => {
+          let data = res.data
+          if (!data.errcode) {
+            if(data.length > 0){
+              let obj = {}
+              for(let i =0; i< data.length; i++){
+                obj[data[i].id] = data[i].name
+              }
+              window.sessionStorage.setItem('agency', JSON.stringify(obj))
+            }
+          } else {
+            // error code here
+          }
+        }).catch(e => {
+          console.error(e)
+        })
+      } 
+  },
   created () {
     this.nav = nav.items
+    this.getAgencyLevel()
   }
 }
 </script>
