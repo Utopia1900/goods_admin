@@ -9,7 +9,6 @@
             :language="language"
             :format="'yyyy-MM-dd'"
             :disabled-dates="disabledDates"
-            v-on:changedDecade="cc"
           />结束日期：
           <datepicker
             v-model="endDate"
@@ -138,9 +137,6 @@ export default {
     }
   },
   methods: {
-    cc() {
-      console.log("sdsd5555");
-    },
     formatDate(date, rule) {
       let parseDate = Date.parse(date);
       let reqDate = new Date(parseDate).FormatDate(rule);
