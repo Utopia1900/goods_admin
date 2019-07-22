@@ -70,10 +70,10 @@
           <b-btn size="md" class="float-right" variant="danger" @click="hideConfirmDialog">取消</b-btn>
           <b-btn size="md" class="float-right" variant="primary" @click="setCustomerLevel()">确定</b-btn>
           <b-alert
-            variant="success"
+            :variant="alertType"
             dismissible
             :show="sucessBox"
-            @dismissed="hasError=false"
+            @dismissed="sucessBox=false"
           >{{successMsg}}</b-alert>
         </div>
       </b-modal>
@@ -100,8 +100,9 @@ export default {
       errmsg: "",
       sucessBox: false,
       successMsg: "",
+      aletType: "",
       fields: [
-         {
+        {
           key: "nickname",
           label: "微信昵称"
         },
@@ -109,10 +110,10 @@ export default {
           key: "name",
           label: "姓名"
         },
-       {
-         key:"mobile",
-         label:"电话"
-       },
+        {
+          key: "mobile",
+          label: "电话"
+        },
         {
           key: "province",
           label: "所在省份"
@@ -243,6 +244,7 @@ export default {
         this.sucessBox = true;
         let data = res.data;
         if (!data.errcode) {
+          this.alertType = "success";
           this.successMsg = "设置成功";
           setTimeout(() => {
             this.hideLevelDialog();
@@ -256,7 +258,11 @@ export default {
             });
           }, 1800);
         } else {
-          this.sucessMsg = data.errmsg;
+          this.alertType = "danger";
+          this.successMsg = `设置失败: ${data.errmsg}`;
+          setTimeout(() => {
+            (this.successMsg = ""), (this.sucessBox = false);
+          }, 2000);
         }
       });
     }
