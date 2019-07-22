@@ -68,7 +68,7 @@
 <script>
 import "@/config/dateFormat.js";
 import Datepicker from "vuejs-datepicker/dist/vuejs-datepicker.esm.js";
-import { zh } from "vuejs-datepicker/src/locale";
+import { zh } from "vuejs-datepicker/dist/locale";
 
 const setBeginDate = (date = new Date(), days = 10) => {
   let tmp = date.setDate(date.getDate() - days);
